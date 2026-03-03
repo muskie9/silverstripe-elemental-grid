@@ -18,13 +18,11 @@
       position: absolute;
       inset: 0;
       pointer-events: none;
-      background: repeating-linear-gradient(
-        -45deg,
-        transparent,
-        transparent 4px,
-        rgba(0, 0, 0, 0.06) 4px,
-        rgba(0, 0, 0, 0.06) 8px
-      );
+      background: repeating-linear-gradient(-45deg,
+          transparent,
+          transparent 4px,
+          rgba(0, 0, 0, 0.06) 4px,
+          rgba(0, 0, 0, 0.06) 8px);
     }
   }
 
@@ -35,14 +33,31 @@
     margin-bottom: 8px;
   }
 
+  &__badge-container {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+  }
+
   &__badge {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     padding: 2px 8px;
     border-radius: 10px;
     background: vars.$color-border-light;
     font-size: 0.75em;
     font-weight: 600;
     line-height: 1.4;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    outline: none;
+
+    &:hover,
+    &:focus {
+      background: darken(vars.$color-border-light, 5%);
+    }
   }
 
   &__body {

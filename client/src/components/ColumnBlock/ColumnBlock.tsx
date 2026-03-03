@@ -2,6 +2,7 @@ import type { ViewportSettings } from '@/types/elements';
 import type { EnrichedColumnNode } from '@/types/enriched';
 import { getElementStatus } from '@/types/status';
 import { useViewportContext } from '@/hooks/ViewportContext';
+import { useState, useRef } from 'react';
 import { getColumnCount, getWidthClass, getOffsetClass } from '@/utils/gridAdapter';
 import CollapseToggle from '@/components/CollapseToggle/CollapseToggle';
 import ElementCard from '@/components/ElementCard/ElementCard';
@@ -9,6 +10,7 @@ import AddElementButton from '@/components/AddElementButton/AddElementButton';
 import EmptyState from '@/components/EmptyState/EmptyState';
 import PublishToggle from '@/components/PublishToggle/PublishToggle';
 import ElementActionsMenu from '@/components/ElementActionsMenu/ElementActionsMenu';
+import GridSettingsPopover from '@/components/GridSettingsPopover/GridSettingsPopover';
 
 interface ColumnBlockProps {
   readonly column: EnrichedColumnNode;
@@ -32,6 +34,8 @@ export default function ColumnBlock({ column }: ColumnBlockProps) {
   const settings = resolveViewportSettings(column, activeViewport, columnCount);
   const status = getElementStatus(column.statusFlags);
   const { isCollapsed, toggle } = column;
+  const badgeRef = useRef<HTMLButtonElement>(null);
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   const outerClasses = [getWidthClass(settings.width)];
   if (settings.offset > 0) {
@@ -51,9 +55,23 @@ export default function ColumnBlock({ column }: ColumnBlockProps) {
       <div className={innerClasses.join(' ')} data-testid="column-block">
         <div className="column-block__header">
           <CollapseToggle isCollapsed={isCollapsed} onToggle={toggle} label={column.title} />
-          <span className="column-block__badge" data-testid="column-badge">
-            {settings.visible ? `${settings.width}/${columnCount}` : 'hidden'}
-          </span>
+          <div className="column-block__badge-container">
+            <button
+              type="button"
+              className="column-block__badge"
+              data-testid="column-badge"
+              ref={badgeRef}
+              onClick={() => setIsPopoverOpen((prev) => !prev)}
+            >
+              {settings.visible ? `${settings.width}/${columnCount}` : 'hidden'}
+            </button>
+            <GridSettingsPopover
+              column={column}
+              isOpen={isPopoverOpen}
+              onClose={() => setIsPopoverOpen(false)}
+              triggerRef={badgeRef}
+            />
+          </div>
           <div className="column-block__actions" style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center' }}>
             <PublishToggle element={column} />
             <ElementActionsMenu element={column} />

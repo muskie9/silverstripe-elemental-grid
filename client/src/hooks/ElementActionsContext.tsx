@@ -1,12 +1,13 @@
 import { createContext, useContext, useMemo } from 'react';
 import type { ReactNode } from 'react';
-import type { CreateElementParams } from '@/api/endpoints';
+import type { CreateElementParams, UpdateGridSettingsParams } from '@/api/endpoints';
 import {
   useCreateElement,
   usePublishElement,
   useUnpublishElement,
   useDeleteElement,
   useDuplicateElement,
+  useUpdateGridSettings,
 } from './useElementMutations';
 
 export interface ElementActions {
@@ -15,6 +16,7 @@ export interface ElementActions {
   readonly unpublishElement: (id: number) => void;
   readonly deleteElement: (id: number) => void;
   readonly duplicateElement: (id: number) => void;
+  readonly updateGridSettings: (params: UpdateGridSettingsParams) => void;
 }
 
 const ElementActionsContext = createContext<ElementActions | null>(null);
@@ -35,6 +37,7 @@ export function ElementActionsProvider({ pageId, children }: ElementActionsProvi
   const unpublishMutation = useUnpublishElement(pageId);
   const deleteMutation = useDeleteElement(pageId);
   const duplicateMutation = useDuplicateElement(pageId);
+  const updateGridMutation = useUpdateGridSettings(pageId);
 
   const actions: ElementActions = useMemo(() => ({
     createElement: (params: CreateElementParams) => createMutation.mutate(params),
@@ -42,7 +45,8 @@ export function ElementActionsProvider({ pageId, children }: ElementActionsProvi
     unpublishElement: (id: number) => unpublishMutation.mutate(id),
     deleteElement: (id: number) => deleteMutation.mutate(id),
     duplicateElement: (id: number) => duplicateMutation.mutate(id),
-  }), [createMutation, publishMutation, unpublishMutation, deleteMutation, duplicateMutation]);
+    updateGridSettings: (params: UpdateGridSettingsParams) => updateGridMutation.mutate(params),
+  }), [createMutation, publishMutation, unpublishMutation, deleteMutation, duplicateMutation, updateGridMutation]);
 
   return (
     <ElementActionsContext.Provider value={actions}>

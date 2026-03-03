@@ -5,8 +5,9 @@ import {
   duplicateElement,
   publishElement,
   unpublishElement,
+  updateGridSettings,
 } from '@/api/endpoints';
-import type { CreateElementParams } from '@/api/endpoints';
+import type { CreateElementParams, UpdateGridSettingsParams } from '@/api/endpoints';
 import type { ApiError } from '@/api/errors';
 import { queryKeys } from './queryKeys';
 
@@ -53,6 +54,13 @@ export function useDeleteElement(pageId: number) {
 export function useDuplicateElement(pageId: number) {
   return useMutation<void, ApiError, number>({
     mutationFn: duplicateElement,
+    ...useInvalidateOnSuccess(pageId),
+  });
+}
+
+export function useUpdateGridSettings(pageId: number) {
+  return useMutation<void, ApiError, UpdateGridSettingsParams>({
+    mutationFn: updateGridSettings,
     ...useInvalidateOnSuccess(pageId),
   });
 }

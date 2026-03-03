@@ -191,6 +191,19 @@ class ElementColumn extends BaseElement implements ElementContainerInterface
         return $classes;
     }
 
+    public function getCMSFields()
+    {
+        $fields = parent::getCMSFields();
+
+        $fields->removeByName('GridSettings');
+        $fields->addFieldToTab(
+            'Root.Main',
+            \WeDevelop\ElementalGrid\Forms\GridSettingsField::create('GridSettings', 'Responsive Settings')
+        );
+
+        return $fields;
+    }
+
     #[\Override]
     protected function onBeforeWrite(): void
     {

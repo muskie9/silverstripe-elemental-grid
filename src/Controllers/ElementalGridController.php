@@ -18,10 +18,12 @@ use WeDevelop\ElementalGrid\Contract\GridAdapterInterface;
 use WeDevelop\ElementalGrid\Contract\Viewport;
 use WeDevelop\ElementalGrid\Model\Result;
 use WeDevelop\ElementalGrid\Model\ValidationError;
+use WeDevelop\ElementalGrid\Elements\ElementColumn;
 use WeDevelop\ElementalGrid\Repository\ElementalAreaRepositoryInterface;
 use WeDevelop\ElementalGrid\Repository\ElementRepositoryInterface;
 use WeDevelop\ElementalGrid\Service\ElementPersistenceService;
 use WeDevelop\ElementalGrid\Service\ElementTreeBuilder;
+use WeDevelop\ElementalGrid\Service\GridUpdateService;
 use WeDevelop\ElementalGrid\Service\ReorderService;
 
 /**
@@ -72,6 +74,7 @@ class ElementalGridController extends AdminController
         'treeBuilder' => '%$' . ElementTreeBuilder::class,
         'persistenceService' => '%$' . ElementPersistenceService::class,
         'reorderService' => '%$' . ReorderService::class,
+        'gridUpdateService' => '%$' . GridUpdateService::class,
     ];
 
     public ElementRepositoryInterface $elementRepository;
@@ -84,6 +87,8 @@ class ElementalGridController extends AdminController
 
     public ReorderService $reorderService;
 
+    public GridUpdateService $gridUpdateService;
+
     /** @var array<string, string> */
     private static array $url_handlers = [
         'GET api/readTree/$PageID!' => 'apiReadTree',
@@ -93,6 +98,7 @@ class ElementalGridController extends AdminController
         'DELETE api/delete' => 'apiDelete',
         'POST api/duplicate' => 'apiDuplicate',
         'PATCH api/reorder' => 'apiReorder',
+        'PATCH api/updateGridSettings' => 'apiUpdateGridSettings',
     ];
 
     /** @var list<string> */
@@ -104,6 +110,7 @@ class ElementalGridController extends AdminController
         'apiDelete',
         'apiDuplicate',
         'apiReorder',
+        'apiUpdateGridSettings',
     ];
 
     public function apiReadTree(HTTPRequest $request): HTTPResponse
@@ -326,6 +333,57 @@ class ElementalGridController extends AdminController
         return $this->jsonSuccess(204);
     }
 
+    public function apiUpdateGridSettings(HTTPRequest $request): HTTPResponse
+    {
+        if (!SecurityToken::inst()->checkRequest($request)) {
+            $this->jsonError(400);
+        }
+
+        $body = json_decode($request->getBody() ?? '', true);
+        if (!is_array($body)) {
+            $this->jsonError(400);
+        }
+
+        $id = $body['id'] ?? null;
+        if (!is_int($id) || $id < 1) {
+            $this->jsonError(400);
+        }
+
+        $viewport = $body['viewport'] ?? null;
+        $width = $body['width'] ?? null;
+        $offset = $body['offset'] ?? null;
+        $visible = $body['visible'] ?? null;
+
+        if (!is_string($viewport) || !is_int($width) || !is_int($offset) || !is_bool($visible)) {
+            $this->jsonError(400);
+        }
+
+        $element = $this->elementRepository->findById($id);
+        if (!$element instanceof ElementColumn) {
+            $this->jsonError(404);
+        }
+
+        if (!$element->canEdit()) {
+            $this->jsonError(403);
+        }
+
+        $payload = [
+            'viewport' => $viewport,
+            'width' => $width,
+            'offset' => $offset,
+            'visible' => $visible,
+        ];
+
+        $result = $this->gridUpdateService->updateSettings($element, $payload);
+        if ($result->isErr()) {
+            return $this->resultToResponse($result);
+        }
+
+        return $this->jsonSuccess(200, [
+            'element' => $this->treeBuilder->buildNode($element),
+        ]);
+    }
+
     /**
      * @return array<string, mixed>
      */
@@ -362,7 +420,7 @@ class ElementalGridController extends AdminController
 
         return [
             'viewports' => array_map(
-                static fn (Viewport $vp): array => [
+                static fn(Viewport $vp): array => [
                     'key' => $vp->key,
                     'label' => $vp->label,
                     'minWidth' => $vp->minWidth,
@@ -480,7 +538,7 @@ class ElementalGridController extends AdminController
     private function resultToResponse(Result $result): never
     {
         $messages = array_map(
-            static fn (ValidationError $error): string => $error->message,
+            static fn(ValidationError $error): string => $error->message,
             $result->errors(),
         );
 

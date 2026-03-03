@@ -10,6 +10,7 @@ vi.mock('@/hooks/ElementActionsContext', () => ({
     unpublishElement: vi.fn(),
     deleteElement: vi.fn(),
     duplicateElement: vi.fn(),
+    updateGridSettings: vi.fn(),
   })),
   ElementActionsProvider: ({ children }: { children: React.ReactNode }) => children,
 }));
