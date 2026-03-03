@@ -13,6 +13,17 @@ vi.mock('@/utils/gridAdapter', () => ({
   getDefaultViewport: vi.fn(() => 'md'),
 }));
 
+vi.mock('@/hooks/ElementActionsContext', () => ({
+  useElementActions: vi.fn(() => ({
+    createElement: vi.fn(),
+    publishElement: vi.fn(),
+    unpublishElement: vi.fn(),
+    deleteElement: vi.fn(),
+    duplicateElement: vi.fn(),
+  })),
+  ElementActionsProvider: ({ children }: { children: React.ReactNode }) => children,
+}));
+
 function makeColumn(overrides: Partial<EnrichedColumnNode> = {}): EnrichedColumnNode {
   return {
     id: 10,

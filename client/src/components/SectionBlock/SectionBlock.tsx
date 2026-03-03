@@ -2,6 +2,7 @@ import type { EnrichedSectionNode } from '@/types/enriched';
 import { getElementStatus } from '@/types/status';
 import CollapseToggle from '@/components/CollapseToggle/CollapseToggle';
 import RowBlock from '@/components/RowBlock/RowBlock';
+import AddElementButton from '@/components/AddElementButton/AddElementButton';
 import EmptyState from '@/components/EmptyState/EmptyState';
 
 interface SectionBlockProps {
@@ -33,6 +34,11 @@ export default function SectionBlock({ section }: SectionBlockProps) {
             />
           ))
           : <EmptyState message="No rows" />}
+        <AddElementButton
+          areaId={section.id}
+          allowedTypes={section.allowedTypes}
+          label="Add row"
+        />
       </div>
     </section>
   );

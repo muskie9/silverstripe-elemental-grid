@@ -5,6 +5,7 @@ import { useViewportContext } from '@/hooks/ViewportContext';
 import { getColumnCount, getWidthClass, getOffsetClass } from '@/utils/gridAdapter';
 import CollapseToggle from '@/components/CollapseToggle/CollapseToggle';
 import ElementCard from '@/components/ElementCard/ElementCard';
+import AddElementButton from '@/components/AddElementButton/AddElementButton';
 import EmptyState from '@/components/EmptyState/EmptyState';
 
 interface ColumnBlockProps {
@@ -58,6 +59,11 @@ export default function ColumnBlock({ column }: ColumnBlockProps) {
               <ElementCard key={child.id} element={child} />
             ))
             : <EmptyState message="No content blocks" />}
+          <AddElementButton
+            areaId={column.id}
+            allowedTypes={column.allowedTypes}
+            label="Add content block"
+          />
         </div>
       </div>
     </div>

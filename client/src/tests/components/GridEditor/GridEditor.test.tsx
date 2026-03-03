@@ -10,6 +10,11 @@ const mockFetchElementTree = vi.fn();
 
 vi.mock('@/api/endpoints', () => ({
   fetchElementTree: (...args: unknown[]) => mockFetchElementTree(...args),
+  createElement: vi.fn(),
+  publishElement: vi.fn(),
+  unpublishElement: vi.fn(),
+  deleteElement: vi.fn(),
+  duplicateElement: vi.fn(),
 }));
 
 vi.mock('@/utils/gridAdapter', () => ({
@@ -169,7 +174,7 @@ describe('GridEditor', () => {
   });
 
   it('shows loading state when fetching', () => {
-    mockFetchElementTree.mockReturnValue(new Promise(() => {}));
+    mockFetchElementTree.mockReturnValue(new Promise(() => { }));
 
     render(<GridEditor areaId={42} pageId={7} />, {
       wrapper: createWrapper(),
@@ -261,7 +266,7 @@ describe('GridEditor', () => {
   });
 
   it('sets data-page-id attribute when pageId is provided', () => {
-    mockFetchElementTree.mockReturnValue(new Promise(() => {}));
+    mockFetchElementTree.mockReturnValue(new Promise(() => { }));
 
     const { container } = render(<GridEditor areaId={42} pageId={7} />, {
       wrapper: createWrapper(),
@@ -321,7 +326,7 @@ describe('GridEditor', () => {
   });
 
   it('does not render content area when still loading', () => {
-    mockFetchElementTree.mockReturnValue(new Promise(() => {}));
+    mockFetchElementTree.mockReturnValue(new Promise(() => { }));
 
     const { container } = render(<GridEditor areaId={42} pageId={7} />, {
       wrapper: createWrapper(),

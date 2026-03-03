@@ -1,0 +1,100 @@
+@use '../../styles/variables' as *;
+
+.add-element {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    padding: 8px 0;
+
+    &__button {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 16px;
+        border: 2px dashed #b3b3b3;
+        border-radius: 4px;
+        background: transparent;
+        color: #666;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+
+        &:hover {
+            border-color: #0071c4;
+            color: #0071c4;
+            background-color: rgba(0, 113, 196, 0.04);
+        }
+
+        &:focus-visible {
+            outline: 2px solid #0071c4;
+            outline-offset: 2px;
+        }
+
+        &:active {
+            background-color: rgba(0, 113, 196, 0.08);
+        }
+    }
+
+    &__icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: #0071c4;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 1;
+        transition: background-color 0.15s ease;
+
+        .add-element__button:hover & {
+            background-color: #005a9e;
+        }
+    }
+
+    // &__label inherits from button — no additional styles needed
+}
+
+.element-type-picker {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    min-width: 200px;
+    max-height: 240px;
+    overflow-y: auto;
+    margin: 4px 0 0;
+    padding: 4px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    list-style: none;
+
+    &:focus {
+        outline: 2px solid #0071c4;
+        outline-offset: -2px;
+    }
+
+    &__option {
+        padding: 8px 16px;
+        font-size: 13px;
+        color: #333;
+        cursor: pointer;
+        transition: background-color 0.1s ease;
+
+        &:hover,
+        &--focused {
+            background-color: #e8f0fe;
+            color: #0071c4;
+        }
+
+        &--focused {
+            font-weight: 500;
+        }
+    }
+}
