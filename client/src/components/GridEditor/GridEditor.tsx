@@ -34,14 +34,11 @@ export default function GridEditor({ areaId, pageId }: GridEditorProps) {
 
   const enrichedSections = useCollapseEnrichment(sections, areaId);
 
-  // Collect the allowed section types from the first section if available,
-  // otherwise fall back to the raw (non-enriched) section data.
-  // For a fresh page with no sections, we use allowedTypes from the page's
-  // elemental area configuration — currently defaulting to the SectionNode
-  // allowedTypes from the page config passed via the tree API.
-  const sectionAllowedTypes = sections.length > 0
-    ? sections[0].allowedTypes
-    : { 'WeDevelop\\ElementalGrid\\Elements\\ElementSection': 'Section' };
+  // The root grid editor (ElementalArea) only accepts ElementSections.
+  // The backend enforces this configuration out of the box.
+  const sectionAllowedTypes = {
+    'WeDevelop\\ElementalGrid\\Elements\\ElementSection': 'Section',
+  };
 
   return (
     <div className="grid-editor" data-area-id={areaId} data-page-id={pageId ?? undefined}>
