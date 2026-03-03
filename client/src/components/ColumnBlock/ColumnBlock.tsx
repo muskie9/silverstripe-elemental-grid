@@ -7,6 +7,8 @@ import CollapseToggle from '@/components/CollapseToggle/CollapseToggle';
 import ElementCard from '@/components/ElementCard/ElementCard';
 import AddElementButton from '@/components/AddElementButton/AddElementButton';
 import EmptyState from '@/components/EmptyState/EmptyState';
+import PublishToggle from '@/components/PublishToggle/PublishToggle';
+import ElementActionsMenu from '@/components/ElementActionsMenu/ElementActionsMenu';
 
 interface ColumnBlockProps {
   readonly column: EnrichedColumnNode;
@@ -52,6 +54,10 @@ export default function ColumnBlock({ column }: ColumnBlockProps) {
           <span className="column-block__badge" data-testid="column-badge">
             {settings.visible ? `${settings.width}/${columnCount}` : 'hidden'}
           </span>
+          <div className="column-block__actions" style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center' }}>
+            <PublishToggle element={column} />
+            <ElementActionsMenu element={column} />
+          </div>
         </div>
         <div className="column-block__body">
           {column.children !== null && column.children.length > 0

@@ -3,6 +3,17 @@ import { render, screen } from '@testing-library/react';
 import ElementCard from '@/components/ElementCard/ElementCard';
 import type { SimpleElementNode } from '@/types/elements';
 
+vi.mock('@/hooks/ElementActionsContext', () => ({
+  useElementActions: vi.fn(() => ({
+    createElement: vi.fn(),
+    publishElement: vi.fn(),
+    unpublishElement: vi.fn(),
+    deleteElement: vi.fn(),
+    duplicateElement: vi.fn(),
+  })),
+  ElementActionsProvider: ({ children }: { children: React.ReactNode }) => children,
+}));
+
 function makeElement(overrides: Partial<SimpleElementNode> = {}): SimpleElementNode {
   return {
     id: 1,
@@ -129,13 +140,10 @@ describe('ElementCard', () => {
     expect(card?.classList.contains('element-card--modified')).toBe(true);
   });
 
-  it('does not render any interactive elements', () => {
+  it('renders the PublishToggle and ElementActionsMenu buttons', () => {
     const { container } = render(<ElementCard element={makeElement()} />);
 
-    expect(container.querySelectorAll('button').length).toBe(0);
-    expect(container.querySelectorAll('a').length).toBe(0);
-    expect(container.querySelectorAll('input').length).toBe(0);
-    expect(container.querySelectorAll('select').length).toBe(0);
-    expect(container.querySelectorAll('textarea').length).toBe(0);
+    // We expect 2 buttons: the PublishToggle switch and the ElementActionsMenu kebab toggle
+    expect(container.querySelectorAll('button').length).toBe(2);
   });
 });

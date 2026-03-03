@@ -1,0 +1,80 @@
+@use '../../styles/mixins';
+@use '../../styles/variables';
+
+.element-actions {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+
+    &__toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        color: #444;
+        background: transparent;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.1s ease-in-out;
+
+        &:hover,
+        &[aria-expanded="true"] {
+            background-color: rgba(0, 0, 0, 0.05);
+            color: #000;
+        }
+
+        &:focus-visible {
+            outline: 2px solid variables.$color-status-draft;
+            outline-offset: -2px;
+        }
+    }
+
+    &__menu {
+        position: absolute;
+        top: calc(100% + 4px);
+        right: 0;
+        z-index: 100;
+        min-width: 160px;
+        padding: 4px 0;
+        background-color: #ffffff;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    &__item {
+        display: block;
+        width: 100%;
+        padding: 8px 16px;
+        font-size: 14px;
+        text-align: left;
+        color: #000;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.1s ease-in-out;
+
+        &:hover,
+        &:focus {
+            background-color: rgba(0, 0, 0, 0.04);
+            outline: none;
+        }
+
+        &--danger {
+            color: #dc3545;
+
+            &:hover,
+            &:focus {
+                background-color: rgba(#dc3545, 0.05);
+            }
+        }
+    }
+
+    &__divider {
+        height: 1px;
+        margin: 4px 0;
+        background-color: #dee2e6;
+    }
+}
