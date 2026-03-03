@@ -342,7 +342,7 @@ final class ElementNodeTest extends TestCase
         $this->assertSame(42, $data['childAreaId']);
     }
 
-    public function testContainerNodeOmitsChildAreaIdWhenNull(): void
+    public function testContainerNodeSerializesChildAreaIdAsNullWhenNotSet(): void
     {
         $node = new ElementNode(
             id: 10,
@@ -362,7 +362,8 @@ final class ElementNodeTest extends TestCase
 
         $data = $node->jsonSerialize();
 
-        $this->assertArrayNotHasKey('childAreaId', $data);
+        $this->assertArrayHasKey('childAreaId', $data);
+        $this->assertNull($data['childAreaId']);
     }
 
     public function testLeafNodeOmitsChildAreaId(): void
@@ -371,5 +372,25 @@ final class ElementNodeTest extends TestCase
         $data = $node->jsonSerialize();
 
         $this->assertArrayNotHasKey('childAreaId', $data);
+    }
+
+    public function testChildAreaIdOnLeafNodeThrows(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('childAreaId may only be provided for container types');
+
+        new ElementNode(
+            id: 99,
+            title: 'Leaf',
+            blockSchema: ['typeName' => 'Content', 'actions' => ['edit' => '/edit/99'], 'content' => '', 'label' => 'Content'],
+            obsoleteClassName: null,
+            version: 1,
+            canDelete: true,
+            canPublish: true,
+            canUnpublish: false,
+            canCreate: true,
+            statusFlags: [],
+            childAreaId: 42,
+        );
     }
 }
