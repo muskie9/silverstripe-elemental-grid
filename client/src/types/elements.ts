@@ -62,6 +62,7 @@ export const gridSettingsSchema = z.record(z.string(), viewportSettingsSchema);
 
 export const columnNodeSchema = baseFieldsSchema.extend({
   containerType: z.literal('column'),
+  childAreaId: z.number().int().nullable(),
   allowedTypes: z.record(z.string(), z.string()).nullable(),
   children: z.array(simpleElementNodeSchema).nullable(),
   gridSettings: gridSettingsSchema,
@@ -69,12 +70,14 @@ export const columnNodeSchema = baseFieldsSchema.extend({
 
 export const rowNodeSchema = baseFieldsSchema.extend({
   containerType: z.literal('row'),
+  childAreaId: z.number().int().nullable(),
   allowedTypes: z.record(z.string(), z.string()).nullable(),
   children: z.array(columnNodeSchema).nullable(),
 });
 
 export const sectionNodeSchema = baseFieldsSchema.extend({
   containerType: z.literal('section'),
+  childAreaId: z.number().int().nullable(),
   allowedTypes: z.record(z.string(), z.string()).nullable(),
   children: z.array(rowNodeSchema).nullable(),
 });

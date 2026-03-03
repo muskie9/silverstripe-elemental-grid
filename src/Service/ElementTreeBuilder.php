@@ -148,12 +148,14 @@ class ElementTreeBuilder
         $allowedTypes = null;
         $children = null;
         $gridSettings = null;
+        $nodeChildAreaId = null;
 
         if ($element instanceof ElementContainerInterface) {
             $containerType = $element->getContainerType();
             $allowedTypes = $this->getAllowedTypes($element);
 
             $childAreaId = (int) $element->ChildAreaID; // @phpstan-ignore cast.int (ORM dynamic property)
+            $nodeChildAreaId = $childAreaId !== 0 ? $childAreaId : null;
             $children = $childAreaId !== 0
                 ? $this->assembleSubTree($elementsByParent, $childAreaId)
                 : [];
@@ -199,6 +201,7 @@ class ElementTreeBuilder
             containerType: $containerType,
             allowedTypes: $allowedTypes,
             children: $children,
+            childAreaId: $nodeChildAreaId,
             gridSettings: $gridSettings,
             extensions: $extensions,
         );

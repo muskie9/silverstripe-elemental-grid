@@ -59,11 +59,13 @@ export default function ColumnBlock({ column }: ColumnBlockProps) {
               <ElementCard key={child.id} element={child} />
             ))
             : <EmptyState message="No content blocks" />}
-          <AddElementButton
-            areaId={column.id}
-            allowedTypes={column.allowedTypes}
-            label="Add content block"
-          />
+          {column.childAreaId != null && (
+            <AddElementButton
+              areaId={column.childAreaId}
+              allowedTypes={column.allowedTypes}
+              label="Add content block"
+            />
+          )}
         </div>
       </div>
     </div>

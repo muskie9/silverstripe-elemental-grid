@@ -48,6 +48,7 @@ function makeColumnNode(
     id: 10,
     title: 'Column',
     containerType: 'column',
+    childAreaId: 100,
     allowedTypes: { 'App\\Model\\ElementContent': 'Content' },
     children,
     gridSettings: {
@@ -70,6 +71,7 @@ function makeRowNode(
     id: 20,
     title: 'Row',
     containerType: 'row',
+    childAreaId: 200,
     allowedTypes: null,
     children,
     ...overrides,
@@ -85,6 +87,7 @@ function makeSectionNode(
     id: 30,
     title: 'Section',
     containerType: 'section',
+    childAreaId: 300,
     allowedTypes: null,
     children,
     ...overrides,
@@ -163,6 +166,7 @@ describe('columnNodeSchema', () => {
       id: 3,
       title: 'Left Column',
       containerType: 'column',
+      childAreaId: null,
       allowedTypes: null,
       children: [],
       gridSettings: {

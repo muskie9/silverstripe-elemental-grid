@@ -34,11 +34,13 @@ export default function SectionBlock({ section }: SectionBlockProps) {
             />
           ))
           : <EmptyState message="No rows" />}
-        <AddElementButton
-          areaId={section.id}
-          allowedTypes={section.allowedTypes}
-          label="Add row"
-        />
+        {section.childAreaId != null && (
+          <AddElementButton
+            areaId={section.childAreaId}
+            allowedTypes={section.allowedTypes}
+            label="Add row"
+          />
+        )}
       </div>
     </section>
   );
